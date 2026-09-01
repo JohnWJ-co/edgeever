@@ -81,7 +81,6 @@ import {
   putLocalNotebook,
 } from "@/lib/local-mirror";
 import { createRepository } from "@/lib/repository";
-import { notifyRepositoryMutation } from "@/lib/repository-events";
 import {
   refreshWorkspaceData,
   shouldNavigateHomeWhenOpeningMemo,
@@ -1495,7 +1494,6 @@ export const WorkspaceApp = ({
         desktopRuntime: Boolean(window.edgeeverDesktop?.isAvailable),
       });
       const data = requiresRemoteMemo ? await api.createMemo(input) : await repository.createMemo(input);
-      if (requiresRemoteMemo) notifyRepositoryMutation(localDataScope, { type: "note.created", note: data.memo });
       await putLocalMemo(localDataScope, data.memo);
       return data;
     },
@@ -1562,7 +1560,6 @@ export const WorkspaceApp = ({
       const data = requiresRemoteMemo
         ? await api.useTemplate(input.templateId, input.notebookId)
         : await repository.useTemplate(input.templateId, input.notebookId);
-      if (requiresRemoteMemo) notifyRepositoryMutation(localDataScope, { type: "note.created", note: data.memo });
       await putLocalMemo(localDataScope, data.memo);
       return data;
     },
